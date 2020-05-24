@@ -1,0 +1,118 @@
+
+The sensor has the following functions
+ 1. measure 3 voltage sources
+ 2. measure 1 voltage from a hall current sensor i.e. ACS711
+ 3. measure 2 RPM
+ 4. provides Altitude, Vario and Temperature from BME280
+ 5. provides Nick, Roll and Headding from BNO055
+ 6. provides Acceleration (X, Y, Z) from BNO055
+ 7. provides Longitude, Latitude, Altitude, Speed, Course and Time from GPS
+ 8. converts RPM, Ubatt, Ibatt, Icpapacity, Ubec, Ibec, Tmotor, Tbec, State ... from and Kontronik ESC
+ 9. outputs a 2kHz signal to control a buzzer
+10. ouptuts 3 digital lines defined by a 32bit pattern i.e to flash LEDs
+11. outputs 2 independent switch channel 
+12. has an input to send a message to the TX display
+13. Status LED with Blink code
+
+low  rpm: 3-20000n
+high rpm: 60-512000n
+
+----------
+microprocessor Atmega 328 PB, 16MHz
+----------
+ * Pin assignment 
+ PD0    USART0		RX0
+ PD1    USART0		TX0
+ PD2    OC3B 		??? free
+ PD3    OC2B		Buzzer
+ PD4    I/O			PIN Output: PIN 0
+ PD5    I/O			LED Flash A
+ PD6    I/O			LED Flash B
+ PD7    I/O			LED Flash C
+ * 
+ PB0    IC1			RX (SW-USART)
+ PB1    I/O			PIN Output: PIN 1
+ PB2    OC1B		TX (SW-USART)
+ PB3    USART1		TX1
+ PB4    USART1		RX1
+ PB5    I/O			System Status LED
+ * 
+ PC0    ADC0		Voltage 0 
+ PC1    ADC1		Voltage 1
+ PC2    ADC2		Voltage 2
+ PC3    ADC3		Current I
+ PC4    I2C0		SDA
+ PC5    I2C0		SCL
+ * 
+ PE0    I/O			PIN input: low -> Message to TX display
+ PE1    T4			RPM high: falling edge, 2Hz resolution
+ PE2    IC3			RPM low : falling edge, 3ms minimum period
+ PE3    I/O			??? PIN analog / digital input free
+ * 
+----------
+ * internal resources	
+  Timer  ?	0 free
+         1	IC1 OCA OCB	16/8MHz		SW USART	9600Baud
+         2	OC2B		125kHz		Buzzer		2kHz
+         3	TCNT3		16/8MHz		1ms Job Timer
+         4	TCNT4		external	RPM Counter high
+ * 
+         I2C 0			125kHz		Pressure	BME280
+									Orientation	BNO055
+ *        
+         USART 0		125.000		EX_Bus Receiver
+         USART 1		115.200		ESC: Kontronik
+         SW-USART		  9.600		GPS / GNSS
+		 
+		 ADC 0			4ms			and Spike min/max
+		 ADC 1			4ms			
+		 ADC 2			4ms
+		 ADC 3			4ms			Hall curent sensor: i.e. ACS711 
+
+----------
+ADC			  4ms	sample period	32 arith. mean	=>	128ms update 
+Pressure	 66ms					5				=>	333ms
+Orientation 100ms					1				=>	100ms
+GPS			typ 1s, depends on the sensor			=>	1000ms
+			Source: GPS or GNSS; Sentences: RMC, GGA
+
+LED Flash	Period 256 - 8000ms in 32 steps
+
+PIN 0/1		digital Output or 1Hz bliking
+
+On Signal Lost (OSL) LED Flash or Buzzer will be turned on
+----------
+
+channel control
+- assign channel 1-24 or OFF
+- if OFF is assigned in case of flash or buzzer it's also turned off in case of signal lost
+
+level definition
+- NORMAL case: MIN < Max
+-- ON	: MIN <= value <= MAX
+-- else OFF
+
+- INVERSE case: MIN > MAX
+-- OFF	: MIN <= value <= MAX
+-- else ON
+
+----------
+FLASH
+This function provides 3 syncron output channels. 
+The period can be defined in steps between 256ms upto 8s.
+A period consits of 32 bit. The bits are shifted out. A 1 means switched ON.
+Each channel has its own 32 bit pattern. 
+In the menu the bits a binary added 0-7 at each pattern position.
+
+----------
+PIN 0/ 1 output pin
+could be turned ON/OFF bey the input channel. 
+In the config menu the output could be defined as BLINK 
+Blink OFF: the ouput is stable
+Blink ON : the outut gets inverted every secound
+
+----------
+PIN input: low -> Message to TX display
+
+----------
+
