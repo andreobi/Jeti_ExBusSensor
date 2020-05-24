@@ -11,7 +11,7 @@ The sensor has the following functions
  9. outputs a 2kHz signal to control a buzzer
 10. ouptuts 3 digital lines defined by a 32bit pattern i.e to flash LEDs
 11. outputs 2 independent switch channel 
-12. has an input to send a message to the TX display
+12. input low to send a message to the TX display
 13. Status LED with Blink code
 
 low  rpm: 3-20000n
@@ -25,17 +25,17 @@ microprocessor Atmega 328 PB, 16MHz
  PD1    USART0		TX0
  PD2    OC3B 		??? free
  PD3    OC2B		Buzzer
- PD4    I/O			PIN Output: PIN 0
- PD5    I/O			LED Flash A
- PD6    I/O			LED Flash B
- PD7    I/O			LED Flash C
+ PD4    I/O		PIN Output: PIN 0
+ PD5    I/O		LED Flash A
+ PD6    I/O		LED Flash B
+ PD7    I/O		LED Flash C
  * 
- PB0    IC1			RX (SW-USART)
- PB1    I/O			PIN Output: PIN 1
+ PB0    IC1		RX (SW-USART)
+ PB1    I/O		PIN Output: PIN 1
  PB2    OC1B		TX (SW-USART)
  PB3    USART1		TX1
  PB4    USART1		RX1
- PB5    I/O			System Status LED
+ PB5    I/O		System Status LED
  * 
  PC0    ADC0		Voltage 0 
  PC1    ADC1		Voltage 1
@@ -44,10 +44,10 @@ microprocessor Atmega 328 PB, 16MHz
  PC4    I2C0		SDA
  PC5    I2C0		SCL
  * 
- PE0    I/O			PIN input: low -> Message to TX display
- PE1    T4			RPM high: falling edge, 2Hz resolution
- PE2    IC3			RPM low : falling edge, 3ms minimum period
- PE3    I/O			??? PIN analog / digital input free
+ PE0    I/O		PIN input: low -> Message to TX display
+ PE1    T4		RPM high: falling edge, 2Hz resolution
+ PE2    IC3		RPM low : falling edge, 3ms minimum period
+ PE3    I/O		??? PIN analog / digital input free
  * 
 ----------
  * internal resources	
@@ -58,23 +58,23 @@ microprocessor Atmega 328 PB, 16MHz
          4	TCNT4		external	RPM Counter high
  * 
          I2C 0			125kHz		Pressure	BME280
-									Orientation	BNO055
+						Orientation	BNO055
  *        
          USART 0		125.000		EX_Bus Receiver
          USART 1		115.200		ESC: Kontronik
          SW-USART		  9.600		GPS / GNSS
 		 
-		 ADC 0			4ms			and Spike min/max
-		 ADC 1			4ms			
-		 ADC 2			4ms
-		 ADC 3			4ms			Hall curent sensor: i.e. ACS711 
+	 ADC 0			4ms		and Spike min/max
+	 ADC 1			4ms			
+	 ADC 2			4ms
+	 ADC 3			4ms		Hall curent sensor: i.e. ACS711 
 
 ----------
-ADC			  4ms	sample period	32 arith. mean	=>	128ms update 
-Pressure	 66ms					5				=>	333ms
-Orientation 100ms					1				=>	100ms
-GPS			typ 1s, depends on the sensor			=>	1000ms
-			Source: GPS or GNSS; Sentences: RMC, GGA
+ADC		  4ms	sample period	32 arith. mean	=>	128ms update 
+Pressure	 66ms	5				=>	333ms
+Orientation 100ms	1				=>	100ms
+GPS	typ 1s, depends on the sensor			=>	1000ms
+	Source: GPS or GNSS; Sentences: RMC, GGA
 
 LED Flash	Period 256 - 8000ms in 32 steps
 
