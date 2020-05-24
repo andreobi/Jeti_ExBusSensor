@@ -18,6 +18,9 @@ Outputs:
 Input:
 1x Switch to ground, will send a message to the TX display
 
+Further function details are in Beschreibung.txt
+Hardware and GPS configuration details are described in JetiSensorArduino.pdf
+
 It is not necessary to connect all sensor parts. 
 In the JetiBox menu is a configuration for the connected hardware and a selection options for which signals should be send.
 
