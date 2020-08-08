@@ -27,3 +27,6 @@ In the JetiBox menu is a configuration for the connected hardware and a selectio
 The Kontronik ESC is only supported via 16Mhz version, because of the 115200k.
 
 I recommend to use an ISP programmer to download the program to get also information about reset reason (brownout or watchdaog) of the sensor.
+
+know issue: 
+Kontronik changed the CRC calculation, depending on the sw version you might get an ESC missing signal error, first aid disable the CRC check in control_k
